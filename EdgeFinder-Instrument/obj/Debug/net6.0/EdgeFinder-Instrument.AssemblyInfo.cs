@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EdgeFinder-Instrument")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7f86a0e43611197c5548d88e4508c4ab728092cb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+02a3d80d55ee5a1bb2dc4bcc0d1907ee727c6d36")]
 [assembly: System.Reflection.AssemblyProductAttribute("EdgeFinder-Instrument")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EdgeFinder-Instrument")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

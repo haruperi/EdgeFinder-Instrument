@@ -6,6 +6,14 @@ using System;
 using System.Linq;
 using System;
 using System.Linq;
+using System;
+using System.Linq;
+using System;
+using System.Linq;
+using System;
+using System.Linq;
+using System;
+using System.Linq;
 using cAlgo.API;
 using cAlgo.API.Internals;
 using cAlgo.API.Indicators;
@@ -19,7 +27,9 @@ namespace cAlgo.Robots
         MeanReversion,
         MeanReversionExtended,
         BreakoutRsi,
-        MeanReversionRsi
+        MeanReversionRsi,
+        BreakoutPrice,
+        MeanReversionPrice
     }
 
     public enum TradeDirection
@@ -76,6 +86,12 @@ namespace cAlgo.Robots
                     break;
                 case StrategyType.MeanReversionRsi:
                     RunMeanReversionRsiStrategy();
+                    break;
+                case StrategyType.BreakoutPrice:
+                    RunBreakoutPriceStrategy();
+                    break;
+                case StrategyType.MeanReversionPrice:
+                    RunMeanReversionPriceStrategy();
                     break;
             }
         }
@@ -270,6 +286,62 @@ namespace cAlgo.Robots
 
             // Sell if RSI > 75
             if (canSell && !hasSellPosition && rsiValue > 75)
+            {
+                ExecuteMarketOrder(TradeType.Sell, SymbolName, volume, Label);
+            }
+        }
+
+        private void RunBreakoutPriceStrategy()
+        {
+            CancelPendingOrders();
+
+            double close = Bars.ClosePrices.Last(1);
+            double previousClose = Bars.ClosePrices.Last(2);
+            double volume = Symbol.QuantityToVolumeInUnits(VolumeInLots);
+
+            var positions = Positions.FindAll(Label, SymbolName);
+            bool hasBuyPosition = positions.Any(p => p.TradeType == TradeType.Buy);
+            bool hasSellPosition = positions.Any(p => p.TradeType == TradeType.Sell);
+
+            bool canBuy = Direction == TradeDirection.Both || Direction == TradeDirection.LongOnly;
+            bool canSell = Direction == TradeDirection.Both || Direction == TradeDirection.ShortOnly;
+
+            // Buy if Close > Previous Close
+            if (canBuy && !hasBuyPosition && close > previousClose)
+            {
+                ExecuteMarketOrder(TradeType.Buy, SymbolName, volume, Label);
+            }
+
+            // Sell if Close < Previous Close
+            if (canSell && !hasSellPosition && close < previousClose)
+            {
+                ExecuteMarketOrder(TradeType.Sell, SymbolName, volume, Label);
+            }
+        }
+
+        private void RunMeanReversionPriceStrategy()
+        {
+            CancelPendingOrders();
+
+            double close = Bars.ClosePrices.Last(1);
+            double previousClose = Bars.ClosePrices.Last(2);
+            double volume = Symbol.QuantityToVolumeInUnits(VolumeInLots);
+
+            var positions = Positions.FindAll(Label, SymbolName);
+            bool hasBuyPosition = positions.Any(p => p.TradeType == TradeType.Buy);
+            bool hasSellPosition = positions.Any(p => p.TradeType == TradeType.Sell);
+
+            bool canBuy = Direction == TradeDirection.Both || Direction == TradeDirection.LongOnly;
+            bool canSell = Direction == TradeDirection.Both || Direction == TradeDirection.ShortOnly;
+
+            // Buy if Close < Previous Close
+            if (canBuy && !hasBuyPosition && close < previousClose)
+            {
+                ExecuteMarketOrder(TradeType.Buy, SymbolName, volume, Label);
+            }
+
+            // Sell if Close > Previous Close
+            if (canSell && !hasSellPosition && close > previousClose)
             {
                 ExecuteMarketOrder(TradeType.Sell, SymbolName, volume, Label);
             }

@@ -25,7 +25,9 @@
           "MeanReversion": 2,
           "MeanReversionExtended": 3,
           "BreakoutRsi": 4,
-          "MeanReversionRsi": 5
+          "MeanReversionRsi": 5,
+          "BreakoutPrice": 6,
+          "MeanReversionPrice": 7
         },
         "DefaultValue": 0,
         "ParameterType": "Enum",
