@@ -21,7 +21,8 @@
       {
         "EnumValues": {
           "Breakout": 0,
-          "BreakoutExtended": 1
+          "BreakoutExtended": 1,
+          "MeanReversion": 2
         },
         "DefaultValue": 0,
         "ParameterType": "Enum",

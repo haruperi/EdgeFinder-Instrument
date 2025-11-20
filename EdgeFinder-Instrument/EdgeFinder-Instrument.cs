@@ -11,7 +11,9 @@ namespace cAlgo.Robots
     public enum StrategyType
     {
         Breakout,
-        BreakoutExtended
+        BreakoutExtended,
+        MeanReversion,
+        MeanReversionExtended
     }
 
     public enum TradeDirection
@@ -50,6 +52,12 @@ namespace cAlgo.Robots
                     break;
                 case StrategyType.BreakoutExtended:
                     RunBreakoutExtendedStrategy();
+                    break;
+                case StrategyType.MeanReversion:
+                    RunMeanReversionStrategy();
+                    break;
+                case StrategyType.MeanReversionExtended:
+                    RunMeanReversionExtendedStrategy();
                     break;
             }
         }
@@ -123,6 +131,75 @@ namespace cAlgo.Robots
             if (canSell && !hasSellPosition && close < previousClose && close < open)
             {
                 PlaceStopOrder(TradeType.Sell, SymbolName, volume, low, Label);
+            }
+        }
+
+        private void RunMeanReversionStrategy()
+        {
+            CancelPendingOrders();
+
+            // Index 1 is the last closed bar
+            double high = Bars.HighPrices.Last(1);
+            double low = Bars.LowPrices.Last(1);
+
+            // Calculate volume
+            double volume = Symbol.QuantityToVolumeInUnits(VolumeInLots);
+
+            // Check for existing open positions
+            var positions = Positions.FindAll(Label, SymbolName);
+            bool hasBuyPosition = positions.Any(p => p.TradeType == TradeType.Buy);
+            bool hasSellPosition = positions.Any(p => p.TradeType == TradeType.Sell);
+
+            // Check Direction constraints
+            bool canBuy = Direction == TradeDirection.Both || Direction == TradeDirection.LongOnly;
+            bool canSell = Direction == TradeDirection.Both || Direction == TradeDirection.ShortOnly;
+
+            // Buy Limit at Low
+            if (canBuy && !hasBuyPosition)
+            {
+                PlaceLimitOrder(TradeType.Buy, SymbolName, volume, low, Label);
+            }
+
+            // Sell Limit at High
+            if (canSell && !hasSellPosition)
+            {
+                PlaceLimitOrder(TradeType.Sell, SymbolName, volume, high, Label);
+            }
+        }
+
+        private void RunMeanReversionExtendedStrategy()
+        {
+            CancelPendingOrders();
+
+            // Index 1 is the last closed bar
+            double high = Bars.HighPrices.Last(1);
+            double low = Bars.LowPrices.Last(1);
+            double close = Bars.ClosePrices.Last(1);
+            double open = Bars.OpenPrices.Last(1);
+            double previousClose = Bars.ClosePrices.Last(2);
+
+            // Calculate volume
+            double volume = Symbol.QuantityToVolumeInUnits(VolumeInLots);
+
+            // Check for existing open positions
+            var positions = Positions.FindAll(Label, SymbolName);
+            bool hasBuyPosition = positions.Any(p => p.TradeType == TradeType.Buy);
+            bool hasSellPosition = positions.Any(p => p.TradeType == TradeType.Sell);
+
+            // Check Direction constraints
+            bool canBuy = Direction == TradeDirection.Both || Direction == TradeDirection.LongOnly;
+            bool canSell = Direction == TradeDirection.Both || Direction == TradeDirection.ShortOnly;
+
+            // Buy Condition: Close < Previous Close AND Close < Open -> Buy Limit at Low
+            if (canBuy && !hasBuyPosition && close < previousClose && close < open)
+            {
+                PlaceLimitOrder(TradeType.Buy, SymbolName, volume, low, Label);
+            }
+
+            // Sell Condition: Close > Previous Close AND Close > Open -> Sell Limit at High
+            if (canSell && !hasSellPosition && close > previousClose && close > open)
+            {
+                PlaceLimitOrder(TradeType.Sell, SymbolName, volume, high, Label);
             }
         }
 
