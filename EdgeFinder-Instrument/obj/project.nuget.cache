@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "GP/9yFO7+c0=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\rharu\\Documents\\cAlgo\\Sources\\Robots\\EdgeFinder-Instrument\\EdgeFinder-Instrument\\EdgeFinder-Instrument.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\rharu\\.nuget\\packages\\ctrader.automate\\1.0.14\\ctrader.automate.1.0.14.nupkg.sha512"
+  ],
+  "logs": []
+}

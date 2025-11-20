@@ -1,0 +1,12 @@
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\bin\Debug\net6.0\EdgeFinder-Instrument.deps.json
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\bin\Debug\net6.0\EdgeFinder-Instrument.dll
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\bin\Debug\net6.0\EdgeFinder-Instrument.pdb
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\EdgeFinder-Instrument.csproj.AssemblyReference.cache
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\EdgeFinder-Instrument.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\EdgeFinder-Instrument.AssemblyInfoInputs.cache
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\EdgeFinder-Instrument.AssemblyInfo.cs
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\EdgeFinder-Instrument.csproj.CoreCompileInputs.cache
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\EdgeFinder-Instrument.dll
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\refint\EdgeFinder-Instrument.dll
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\EdgeFinder-Instrument.pdb
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\ref\EdgeFinder-Instrument.dll
