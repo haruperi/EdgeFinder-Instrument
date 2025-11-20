@@ -10,3 +10,4 @@ C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-I
 C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\refint\EdgeFinder-Instrument.dll
 C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\EdgeFinder-Instrument.pdb
 C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\ref\EdgeFinder-Instrument.dll
+C:\Users\rharu\Documents\cAlgo\Sources\Robots\EdgeFinder-Instrument\EdgeFinder-Instrument\obj\Debug\net6.0\EdgeFinder-Instrument.sourcelink.json

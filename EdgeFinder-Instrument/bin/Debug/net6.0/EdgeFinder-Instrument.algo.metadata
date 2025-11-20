@@ -20,7 +20,8 @@
     "Parameters": [
       {
         "EnumValues": {
-          "Breakout": 0
+          "Breakout": 0,
+          "BreakoutExtended": 1
         },
         "DefaultValue": 0,
         "ParameterType": "Enum",
