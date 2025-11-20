@@ -22,7 +22,10 @@
         "EnumValues": {
           "Breakout": 0,
           "BreakoutExtended": 1,
-          "MeanReversion": 2
+          "MeanReversion": 2,
+          "MeanReversionExtended": 3,
+          "BreakoutRsi": 4,
+          "MeanReversionRsi": 5
         },
         "DefaultValue": 0,
         "ParameterType": "Enum",
@@ -63,6 +66,18 @@
         "ParameterType": "String",
         "PropertyName": "Label",
         "FriendlyName": "Label",
+        "GroupName": null,
+        "IsValueVisibleInTitle": true,
+        "Description": ""
+      },
+      {
+        "MinValue": -2147483648,
+        "MaxValue": 2147483647,
+        "Step": 1,
+        "DefaultValue": 2,
+        "ParameterType": "Integer",
+        "PropertyName": "RsiPeriod",
+        "FriendlyName": "RSI Period",
         "GroupName": null,
         "IsValueVisibleInTitle": true,
         "Description": ""

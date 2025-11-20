@@ -2,6 +2,10 @@ using System;
 using System.Linq;
 using System;
 using System.Linq;
+using System;
+using System.Linq;
+using System;
+using System.Linq;
 using cAlgo.API;
 using cAlgo.API.Internals;
 using cAlgo.API.Indicators;
@@ -13,7 +17,9 @@ namespace cAlgo.Robots
         Breakout,
         BreakoutExtended,
         MeanReversion,
-        MeanReversionExtended
+        MeanReversionExtended,
+        BreakoutRsi,
+        MeanReversionRsi
     }
 
     public enum TradeDirection
@@ -26,6 +32,8 @@ namespace cAlgo.Robots
     [Robot(TimeZone = TimeZones.UTC, AccessRights = AccessRights.None)]
     public class EdgeFinderInstrument : Robot
     {
+        private RelativeStrengthIndex _rsi;
+
         [Parameter("Strategy", DefaultValue = StrategyType.Breakout)]
         public StrategyType Strategy { get; set; }
 
@@ -38,9 +46,13 @@ namespace cAlgo.Robots
         [Parameter("Label", DefaultValue = "EdgeFinder")]
         public string Label { get; set; }
 
+        [Parameter("RSI Period", DefaultValue = 2)]
+        public int RsiPeriod { get; set; }
+
         protected override void OnStart()
         {
             Positions.Opened += OnPositionOpened;
+            _rsi = Indicators.RelativeStrengthIndex(Bars.ClosePrices, RsiPeriod);
         }
 
         protected override void OnBar()
@@ -58,6 +70,12 @@ namespace cAlgo.Robots
                     break;
                 case StrategyType.MeanReversionExtended:
                     RunMeanReversionExtendedStrategy();
+                    break;
+                case StrategyType.BreakoutRsi:
+                    RunBreakoutRsiStrategy();
+                    break;
+                case StrategyType.MeanReversionRsi:
+                    RunMeanReversionRsiStrategy();
                     break;
             }
         }
@@ -200,6 +218,60 @@ namespace cAlgo.Robots
             if (canSell && !hasSellPosition && close > previousClose && close > open)
             {
                 PlaceLimitOrder(TradeType.Sell, SymbolName, volume, high, Label);
+            }
+        }
+
+        private void RunBreakoutRsiStrategy()
+        {
+            CancelPendingOrders();
+
+            double rsiValue = _rsi.Result.Last(1);
+            double volume = Symbol.QuantityToVolumeInUnits(VolumeInLots);
+
+            var positions = Positions.FindAll(Label, SymbolName);
+            bool hasBuyPosition = positions.Any(p => p.TradeType == TradeType.Buy);
+            bool hasSellPosition = positions.Any(p => p.TradeType == TradeType.Sell);
+
+            bool canBuy = Direction == TradeDirection.Both || Direction == TradeDirection.LongOnly;
+            bool canSell = Direction == TradeDirection.Both || Direction == TradeDirection.ShortOnly;
+
+            // Buy if RSI > 75
+            if (canBuy && !hasBuyPosition && rsiValue > 75)
+            {
+                ExecuteMarketOrder(TradeType.Buy, SymbolName, volume, Label);
+            }
+
+            // Sell if RSI < 25
+            if (canSell && !hasSellPosition && rsiValue < 25)
+            {
+                ExecuteMarketOrder(TradeType.Sell, SymbolName, volume, Label);
+            }
+        }
+
+        private void RunMeanReversionRsiStrategy()
+        {
+            CancelPendingOrders();
+
+            double rsiValue = _rsi.Result.Last(1);
+            double volume = Symbol.QuantityToVolumeInUnits(VolumeInLots);
+
+            var positions = Positions.FindAll(Label, SymbolName);
+            bool hasBuyPosition = positions.Any(p => p.TradeType == TradeType.Buy);
+            bool hasSellPosition = positions.Any(p => p.TradeType == TradeType.Sell);
+
+            bool canBuy = Direction == TradeDirection.Both || Direction == TradeDirection.LongOnly;
+            bool canSell = Direction == TradeDirection.Both || Direction == TradeDirection.ShortOnly;
+
+            // Buy if RSI < 25
+            if (canBuy && !hasBuyPosition && rsiValue < 25)
+            {
+                ExecuteMarketOrder(TradeType.Buy, SymbolName, volume, Label);
+            }
+
+            // Sell if RSI > 75
+            if (canSell && !hasSellPosition && rsiValue > 75)
+            {
+                ExecuteMarketOrder(TradeType.Sell, SymbolName, volume, Label);
             }
         }
 
