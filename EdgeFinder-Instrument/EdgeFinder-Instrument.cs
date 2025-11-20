@@ -14,6 +14,22 @@ using System;
 using System.Linq;
 using System;
 using System.Linq;
+using System;
+using System.Linq;
+using System;
+using System.Linq;
+using System;
+using System.Linq;
+using System;
+using System.Linq;
+using System;
+using System.Linq;
+using System;
+using System.Linq;
+using System;
+using System.Linq;
+using System;
+using System.Linq;
 using cAlgo.API;
 using cAlgo.API.Internals;
 using cAlgo.API.Indicators;
@@ -29,7 +45,9 @@ namespace cAlgo.Robots
         BreakoutRsi,
         MeanReversionRsi,
         BreakoutPrice,
-        MeanReversionPrice
+        MeanReversionPrice,
+        BreakoutBollingerBands,
+        MeanReversionBollingerBands
     }
 
     public enum TradeDirection
@@ -43,6 +61,7 @@ namespace cAlgo.Robots
     public class EdgeFinderInstrument : Robot
     {
         private RelativeStrengthIndex _rsi;
+        private BollingerBands _bollingerBands;
 
         [Parameter("Strategy", DefaultValue = StrategyType.Breakout)]
         public StrategyType Strategy { get; set; }
@@ -59,10 +78,17 @@ namespace cAlgo.Robots
         [Parameter("RSI Period", DefaultValue = 2)]
         public int RsiPeriod { get; set; }
 
+        [Parameter("Bollinger Period", DefaultValue = 10)]
+        public int BollingerPeriod { get; set; }
+
+        [Parameter("Bollinger StdDev", DefaultValue = 2.0)]
+        public double BollingerStdDev { get; set; }
+
         protected override void OnStart()
         {
             Positions.Opened += OnPositionOpened;
             _rsi = Indicators.RelativeStrengthIndex(Bars.ClosePrices, RsiPeriod);
+            _bollingerBands = Indicators.BollingerBands(Bars.ClosePrices, BollingerPeriod, BollingerStdDev, MovingAverageType.Simple);
         }
 
         protected override void OnBar()
@@ -92,6 +118,12 @@ namespace cAlgo.Robots
                     break;
                 case StrategyType.MeanReversionPrice:
                     RunMeanReversionPriceStrategy();
+                    break;
+                case StrategyType.BreakoutBollingerBands:
+                    RunBreakoutBollingerBandsStrategy();
+                    break;
+                case StrategyType.MeanReversionBollingerBands:
+                    RunMeanReversionBollingerBandsStrategy();
                     break;
             }
         }
@@ -342,6 +374,64 @@ namespace cAlgo.Robots
 
             // Sell if Close > Previous Close
             if (canSell && !hasSellPosition && close > previousClose)
+            {
+                ExecuteMarketOrder(TradeType.Sell, SymbolName, volume, Label);
+            }
+        }
+
+        private void RunBreakoutBollingerBandsStrategy()
+        {
+            CancelPendingOrders();
+
+            double close = Bars.ClosePrices.Last(1);
+            double upperBand = _bollingerBands.Top.Last(1);
+            double lowerBand = _bollingerBands.Bottom.Last(1);
+            double volume = Symbol.QuantityToVolumeInUnits(VolumeInLots);
+
+            var positions = Positions.FindAll(Label, SymbolName);
+            bool hasBuyPosition = positions.Any(p => p.TradeType == TradeType.Buy);
+            bool hasSellPosition = positions.Any(p => p.TradeType == TradeType.Sell);
+
+            bool canBuy = Direction == TradeDirection.Both || Direction == TradeDirection.LongOnly;
+            bool canSell = Direction == TradeDirection.Both || Direction == TradeDirection.ShortOnly;
+
+            // Buy if Close > UpperBand
+            if (canBuy && !hasBuyPosition && close > upperBand)
+            {
+                ExecuteMarketOrder(TradeType.Buy, SymbolName, volume, Label);
+            }
+
+            // Sell if Close < LowerBand
+            if (canSell && !hasSellPosition && close < lowerBand)
+            {
+                ExecuteMarketOrder(TradeType.Sell, SymbolName, volume, Label);
+            }
+        }
+
+        private void RunMeanReversionBollingerBandsStrategy()
+        {
+            CancelPendingOrders();
+
+            double close = Bars.ClosePrices.Last(1);
+            double upperBand = _bollingerBands.Top.Last(1);
+            double lowerBand = _bollingerBands.Bottom.Last(1);
+            double volume = Symbol.QuantityToVolumeInUnits(VolumeInLots);
+
+            var positions = Positions.FindAll(Label, SymbolName);
+            bool hasBuyPosition = positions.Any(p => p.TradeType == TradeType.Buy);
+            bool hasSellPosition = positions.Any(p => p.TradeType == TradeType.Sell);
+
+            bool canBuy = Direction == TradeDirection.Both || Direction == TradeDirection.LongOnly;
+            bool canSell = Direction == TradeDirection.Both || Direction == TradeDirection.ShortOnly;
+
+            // Buy if Close < LowerBand
+            if (canBuy && !hasBuyPosition && close < lowerBand)
+            {
+                ExecuteMarketOrder(TradeType.Buy, SymbolName, volume, Label);
+            }
+
+            // Sell if Close > UpperBand
+            if (canSell && !hasSellPosition && close > upperBand)
             {
                 ExecuteMarketOrder(TradeType.Sell, SymbolName, volume, Label);
             }
